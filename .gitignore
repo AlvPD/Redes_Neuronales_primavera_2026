@@ -1,0 +1,5 @@
+*.gz
+*.pkl
+# Ignorar carpetas de compilación de Python
+__pycache__/
+*.pyc
