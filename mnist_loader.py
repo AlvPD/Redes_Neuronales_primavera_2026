@@ -2,38 +2,37 @@
 """
 mnist_loader
 ~~~~~~~~~~~~
-A library to load the MNIST image data.  For details of the data
-structures that are returned, see the doc strings for ``load_data``
-and ``load_data_wrapper``.  In practice, ``load_data_wrapper`` is the
-function usually called by our neural network code.
+Una biblioteca para cargar los datos de imágenes MNIST. Para detalles sobre las
+estructuras de datos devueltas, consulta las cadenas de documentación (docstrings)
+de ``load_data`` y ``load_data_wrapper``. En la práctica, ``load_data_wrapper``
+es la función que solemos llamar en nuestro código de redes neuronales.
 """
 
-#### Libraries
-# Standard library
+#### Bibliotecas
+# Biblioteca estándar
 import pickle
 import gzip
 
-# Third-party libraries
+# Bibliotecas de terceros
 import numpy as np
 
 def load_data():
-    """Return the MNIST data as a tuple containing the training data,
-    the validation data, and the test data.
-    The ``training_data`` is returned as a tuple with two entries.
-    The first entry contains the actual training images.  This is a
-    numpy ndarray with 50,000 entries.  Each entry is, in turn, a
-    numpy ndarray with 784 values, representing the 28 * 28 = 784
-    pixels in a single MNIST image.
-    The second entry in the ``training_data`` tuple is a numpy ndarray
-    containing 50,000 entries.  Those entries are just the digit
-    values (0...9) for the corresponding images contained in the first
-    entry of the tuple.
-    The ``validation_data`` and ``test_data`` are similar, except
-    each contains only 10,000 images.
-    This is a nice data format, but for use in neural networks it's
-    helpful to modify the format of the ``training_data`` a little.
-    That's done in the wrapper function ``load_data_wrapper()``, see
-    below.
+    """Devuelve los datos de MNIST como una tupla que contiene los datos de entrenamiento,
+    los datos de validación y los datos de prueba.
+    
+    Los ``training_data`` se devuelven como una tupla con dos entradas.
+    La primera entrada contiene las imágenes de entrenamiento reales. Es un
+    ndarray de numpy con 50,000 entradas. Cada entrada es, a su vez, un
+    ndarray de numpy con 784 valores, que representan los 28 * 28 = 784
+    píxeles de una sola imagen de MNIST.
+    
+    La segunda entrada en la tupla ``training_data`` es un ndarray de numpy
+    que contiene 50,000 entradas. Esas entradas son solo los valores de los
+    dígitos (0...9) para las imágenes correspondientes contenidas en la primera
+    entrada de la tupla.
+    
+    Los ``validation_data`` y ``test_data`` son similares, excepto que
+    cada uno contiene solo 10,000 imágenes.
     """
     f = gzip.open('mnist.pkl.gz', 'rb')
     training_data, validation_data, test_data = pickle.load(f, encoding="latin1")
@@ -41,23 +40,19 @@ def load_data():
     return (training_data, validation_data, test_data)
 
 def load_data_wrapper():
-    """Return a tuple containing ``(training_data, validation_data,
-    test_data)``. Based on ``load_data``, but the format is more
-    convenient for use in our implementation of neural networks.
-    In particular, ``training_data`` is a list containing 50,000
-    2-tuples ``(x, y)``.  ``x`` is a 784-dimensional numpy.ndarray
-    containing the input image.  ``y`` is a 10-dimensional
-    numpy.ndarray representing the unit vector corresponding to the
-    correct digit for ``x``.
-    ``validation_data`` and ``test_data`` are lists containing 10,000
-    2-tuples ``(x, y)``.  In each case, ``x`` is a 784-dimensional
-    numpy.ndarry containing the input image, and ``y`` is the
-    corresponding classification, i.e., the digit values (integers)
-    corresponding to ``x``.
-    Obviously, this means we're using slightly different formats for
-    the training data and the validation / test data.  These formats
-    turn out to be the most convenient for use in our neural network
-    code."""
+    """Devuelve una tupla que contiene ``(training_data, validation_data, test_data)``.
+    Basado en ``load_data``, pero el formato es más conveniente para su uso en
+    nuestra implementación de redes neuronales.
+    
+    En particular, ``training_data`` es una lista que contiene 50,000
+    tuplas de dos elementos ``(x, y)``. ``x`` es un numpy.ndarray de 784 dimensiones
+    que contiene la imagen de entrada. ``y`` es un numpy.ndarray de 10 dimensiones
+    que representa el vector unitario correspondiente al dígito correcto para ``x``.
+    
+    ``validation_data`` y ``test_data`` son listas que contienen 10,000
+    tuplas de dos elementos ``(x, y)``. En cada caso, ``x`` es un numpy.ndarray
+    de 784 dimensiones con la imagen, y ``y`` es la clasificación correspondiente,
+    es decir, los valores de los dígitos (enteros)."""
     tr_d, va_d, te_d = load_data()
     training_inputs = [np.reshape(x, (784, 1)) for x in tr_d[0]]
     training_results = [vectorized_result(y) for y in tr_d[1]]
@@ -69,10 +64,9 @@ def load_data_wrapper():
     return (training_data, validation_data, test_data)
 
 def vectorized_result(j):
-    """Return a 10-dimensional unit vector with a 1.0 in the jth
-    position and zeroes elsewhere.  This is used to convert a digit
-    (0...9) into a corresponding desired output from the neural
-    network."""
+    """Devuelve un vector unitario de 10 dimensiones con un 1.0 en la posición j
+    y ceros en las demás. Esto se usa para convertir un dígito (0...9) en una
+    salida deseada de la red neuronal."""
     e = np.zeros((10, 1))
     e[j] = 1.0
     return e
